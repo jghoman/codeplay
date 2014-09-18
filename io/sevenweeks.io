@@ -19,3 +19,4 @@ Car type print
 
 ferrari := Car clone
 ferrari type print
+"\n" print
