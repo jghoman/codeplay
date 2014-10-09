@@ -1,0 +1,52 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath (group: 'com.sahlbach.gradle', name: 'gradle-jetty-eclipse-plugin', version: '1.9.+')
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'war'
+apply plugin: 'jettyEclipse'
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+task downloadWrapper(type: Wrapper) {
+    description = "Download the gradle wrapper and requisite files. Overwrites existing wrapper files."
+    gradleVersion = project.gradleVersion
+}
+
+dependencies {
+
+  compile('javax.ws.rs:javax.ws.rs-api:2.0.1')
+  runtime('org.glassfish.jersey.containers:jersey-container-servlet-core:2.6')
+  //runtime('org.glassfish.jersey.containers:jersey-container-servlet-core:2.12')
+
+  testCompile("junit:junit:$junitVersion")
+}
+
+// global settings
+jettyEclipse {
+    // Defaults
+    // httpPort = 8080
+    // stopPort = 8090
+    // stopKey = "stop"
+    contextPath = '/'
+    // scanIntervalInSeconds = 5
+    // automaticReload = false
+    // rebuildIntervalInSeconds = 0
+    //passwordFile = new File('src/main/debug/pwd.txt')
+}
+
+// adding request log to standard jetty Eclipse Run task
+jettyEclipseRun {
+    requestLog = new File(project.buildDir,"request.log")
+}
+
+//contextPath = '/jersey/helloworld'
