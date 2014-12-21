@@ -1,6 +1,6 @@
 CC=rustc
 
-all: hello match struct
+all: hello match struct arrays
 
 hello:
 	$(CC) hello.rs
@@ -11,5 +11,8 @@ match:
 struct:
 	$(CC) struct.rs
 
+arrays:
+	$(CC) arrays.rs
+
 clean:
-	rm -f hello match struct
+	rm -f hello match struct arrays
