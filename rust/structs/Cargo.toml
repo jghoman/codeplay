@@ -1,0 +1,5 @@
+[package]
+
+name = "structs"
+version = "0.0.1"
+authors = ["Jakob Homan <jghoman@gmail.com>"]
