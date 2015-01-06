@@ -171,9 +171,6 @@ public class Doublets {
   private Map<Integer, Set<String>> groupedByLength = new HashMap<>();
   private Map<Integer, Map<String, Set<String>>>  adjListByLength = null;
 
-  private long duration;
-
-
   public static Collection<String> fileToWords(String pathString) throws IOException {
     Path path = Paths.get(pathString);
     Collection<String> words = new HashSet<>();
@@ -208,7 +205,7 @@ public class Doublets {
 
     @Override
     public void run() {
-      System.out.println("Working on length = " + length);
+      //System.out.println("Working on length = " + length);
       Map<String, Set<String>> adjList = new HashMap<>(words.size());
       long start = System.nanoTime();
       while(!words.isEmpty()) {
@@ -217,7 +214,7 @@ public class Doublets {
       }
       doublets.update(length, adjList);
       long dur = System.nanoTime() - start;
-      System.out.println(length + ": Duration = "  + dur + " nanoseconds = " + (dur / 1_000_000_000l) + " seconds, Comparisons = " + comparisons);
+      System.out.println(length + ": Duration = " + (dur / 1_000_000_000l) + " seconds, Comparisons = " + comparisons);
 
       cdl.countDown();
     }
@@ -265,7 +262,7 @@ public class Doublets {
     cdl.await();
     es.shutdown();
     long progDur = System.nanoTime() - progStart;
-    System.out.println("Program duration = "  + progDur + " nanoseconds = " + (progDur / 1_000_000_000l) + " seconds");
+    System.out.println("Program duration = " + (progDur / 1_000_000_000l) + " seconds");
 
   }
 
