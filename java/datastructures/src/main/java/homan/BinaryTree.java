@@ -140,4 +140,24 @@ public class BinaryTree<T extends Comparable> {
   public void clear() {
     this.root = null;
   }
+
+  public boolean contains(T t) {
+    return contains(t, root);
+  }
+
+  private boolean contains(T t, Node<T> node) {
+    if(node == null) {
+      return false;
+    }
+
+    int equality = t.compareTo(node.getElement());
+    if(equality < 0) {
+      return contains(t, node.getLeft());
+    } else if (equality == 0) {
+      return true;
+    } else {
+      return contains(t, node.getRight());
+    }
+  }
+
 }

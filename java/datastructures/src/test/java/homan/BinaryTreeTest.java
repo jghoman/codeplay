@@ -21,8 +21,7 @@ public class BinaryTreeTest {
     assertFalse(bt.isEmpty());
   }
 
-  @Test
-  public void insertWorks() {
+  public BinaryTree<String> getBalancedTree() {
     BinaryTree<String> bt = new BinaryTree<>();
     bt.insert("m");
     bt.insert("a");
@@ -30,17 +29,28 @@ public class BinaryTreeTest {
     bt.insert("f");
     bt.insert("b");
 
+    return bt;
+  }
+
+  @Test
+  public void containsWorks() {
+    BinaryTree<String> bt = getBalancedTree();
+
+    assertTrue(bt.contains("z"));
+    assertTrue(bt.contains("m"));
+    assertFalse(bt.contains("c"));
+
+  }
+
+  @Test
+  public void insertWorks() {
+    BinaryTree<String> bt = getBalancedTree();
     bt.printInOrder();
   }
 
   @Test
   public void inOrderIteratorWorks() {
-    BinaryTree<String> bt = new BinaryTree<>();
-    bt.insert("m");
-    bt.insert("a");
-    bt.insert("z");
-    bt.insert("f");
-    bt.insert("b");
+    BinaryTree<String> bt = getBalancedTree();
 
     Iterator<String> iter = bt.getInOrderIterator();
 
