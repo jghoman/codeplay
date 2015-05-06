@@ -1,15 +1,11 @@
 package homan;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.paukov.combinatorics.Factory;
 import org.paukov.combinatorics.Generator;
 import org.paukov.combinatorics.ICombinatoricsVector;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -64,12 +60,10 @@ public class BinaryTreeTest {
 
     ICombinatoricsVector<String> originalVector = Factory.createVector(alphabet);
     Generator<String> gen = Factory.createPermutationGenerator(originalVector);
-    int counter = 0;
 
     BinaryTree<String> bt = new BinaryTree<>();
     ArrayList<String> fromTree = new ArrayList<>(NUM_LETTERS);
     for (ICombinatoricsVector<String> perm : gen) {
-      counter++;
       for(String s : perm.getVector()) {
         bt.insert(s);
       }
@@ -78,7 +72,6 @@ public class BinaryTreeTest {
       bt.clear();
       fromTree.clear();
     }
-    System.out.println("Counter = " + counter);
   }
 
   @Test
@@ -87,11 +80,17 @@ public class BinaryTreeTest {
 
     Iterator<String> iter = bt.getInOrderIterator();
 
+    Queue<String> q = new LinkedList<>();
+    q.add("a");
+    q.add("b");
+    q.add("f");
+    q.add("m");
+    q.add("z");
+
     while(iter.hasNext()) {
-      String i = iter.next();
-      System.out.println("howdy : " + i);
+      assertEquals(q.poll(), iter.next());
     }
-    // TODO: Actually do a test here
+    assertTrue(q.isEmpty());
   }
 
   @Test
@@ -108,12 +107,10 @@ public class BinaryTreeTest {
     
     ICombinatoricsVector<String> originalVector = Factory.createVector(alphabet);
     Generator<String> gen = Factory.createPermutationGenerator(originalVector);
-    int counter = 0;
 
     BinaryTree<String> bt = new BinaryTree<>();
     ArrayList<String> fromTree = new ArrayList<>(NUM_LETTERS);
     for (ICombinatoricsVector<String> perm : gen) {
-      counter++;
       for(String s : perm.getVector()) {
         bt.insert(s);
       }
@@ -127,7 +124,6 @@ public class BinaryTreeTest {
       bt.clear();
       fromTree.clear();
     }
-    System.out.println("Counter = " + counter);
   }
 
   @Test
@@ -247,14 +243,12 @@ public class BinaryTreeTest {
 
     ICombinatoricsVector<String> originalVector = Factory.createVector(alphabet);
     Generator<String> gen = Factory.createPermutationGenerator(originalVector);
-    int counter = 0;
 
     BinaryTree<String> bt = new BinaryTree<>();
     ArrayList<String> fromTree = new ArrayList<>(NUM_LETTERS);
     for (ICombinatoricsVector<String> perm : gen) {
       for(String letter : expected) {
 
-        counter++;
         for (String s : perm.getVector()) {
           bt.insert(s);
         }
@@ -267,6 +261,5 @@ public class BinaryTreeTest {
       }
 
     }
-    System.out.println("zCounter = " + counter);
   }
 }
