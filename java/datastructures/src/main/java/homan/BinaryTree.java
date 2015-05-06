@@ -1,6 +1,8 @@
 package homan;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class BinaryTree<T extends Comparable> {
 
@@ -80,6 +82,35 @@ public class BinaryTree<T extends Comparable> {
   // Visible for testing
   BinaryTree(Node<T> root) {
     this.root = root;
+  }
+
+  protected boolean validate() {
+    if(root == null) {
+      return true;
+    }
+
+    return validate(root);
+  }
+
+  private boolean validate(Node<T> node) {
+    if(node.getLeft() != null) {
+      if(node.getLeft().element.compareTo(node.element) >= 0) {
+        return false;
+      }
+      if(!validate(node.getLeft())) {
+        return false;
+      }
+    }
+
+    if(node.getRight() != null) {
+      if(node.getRight().element.compareTo(node.element) < 0) {
+        return false;
+      }
+      if(!validate(node.getRight())) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public void insert(T t) {
@@ -185,30 +216,20 @@ public class BinaryTree<T extends Comparable> {
     }
   }
 
-  /**
-   * Find and disconnect the minimum node in the tree
-   */
-  protected Node<T> removeMinNode() {
-    // Empty tree
-    if(root == null) {
+  protected T findMinValue() {
+    return findMinValue(root);
+  }
+
+  protected T findMinValue(Node<T> node) {
+    if(node == null) {
       return null;
     }
 
-    // Just root tree
-    if(root.getRight() == null && root.getLeft() == null) {
-      Node<T> toReturn = root;
-      root = null;
-      return toReturn;
+    if(node.getLeft() == null) {
+      return node.getElement();
     }
 
-    Node<T> cursor = root;
-    while(cursor.getRight().getRight() != null) {
-      cursor = cursor.getRight();
-    }
-
-    Node<T> toReturn = cursor.getRight();
-    cursor.setRight(null);
-    return toReturn;
+    return findMinValue(node.getLeft());
   }
 
   public boolean remove(T t) {
@@ -219,7 +240,12 @@ public class BinaryTree<T extends Comparable> {
     if(root.element.equals(t)) {
       return removeRoot();
     }
-    return remove(t, root, null);
+
+    if(t.compareTo(root.element) < 0) {
+      return remove(t, root.getLeft(), root);
+    } else {
+      return remove(t, root.getRight(), root);
+    }
   }
 
   private boolean removeRoot() {
@@ -238,11 +264,62 @@ public class BinaryTree<T extends Comparable> {
       return true;
     }
 
+    // Root has both left and right children, restructure tree around
+    // right side min.
+    T rightSideMin = findMinValue(root.getRight());
+    assert(rightSideMin != null);
+    remove(rightSideMin);
+    root.element = rightSideMin;
     return true;
   }
 
   private boolean remove(T t, Node<T> node, Node<T> parent) {
-    return true;
+    if(node == null) {
+      return false;
+    }
+
+    if(node.element.equals(t)) {
+      if(node.getLeft() == null && node.getRight() == null) {
+        // leaf, just delete it
+        if(parent.getLeft() == node) {
+          parent.setLeft(null);
+        } else {
+          parent.setRight(null);
+        }
+        return true;
+      }
+
+      if(node.getLeft() != null && node.getRight() == null) {
+        if(parent.getLeft() == node) {
+          parent.setLeft(node.getLeft());
+        } else {
+          parent.setRight(node.getLeft());
+        }
+        return true;
+      }
+
+      if(node.getLeft() == null && node.getRight() != null) {
+        if(parent.getLeft() == node) {
+          parent.setLeft(node.getRight());
+        } else {
+          parent.setRight(node.getRight());
+        }
+        return true;
+      }
+
+      // Both of node's children exist...
+      T rightSideMin = findMinValue(node.getRight());
+      assert(rightSideMin != null);
+      remove(rightSideMin, node.getRight(), node);
+      node.element = rightSideMin;
+      return true;
+    }
+
+    if(t.compareTo(node.element) < 0) {
+      return remove(t, node.getLeft(), node);
+    } else {
+      return remove(t, node.getRight(), node);
+    }
   }
 
   @Override

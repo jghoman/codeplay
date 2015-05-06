@@ -1,9 +1,17 @@
 package homan;
 
-import java.util.*;
-import org.junit.*;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.paukov.combinatorics.Factory;
+import org.paukov.combinatorics.Generator;
+import org.paukov.combinatorics.ICombinatoricsVector;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+
 import static org.junit.Assert.*;
-import org.paukov.combinatorics.*;
 
 public class BinaryTreeTest {
 
@@ -44,9 +52,33 @@ public class BinaryTreeTest {
 
   @Test
   public void insertWorks() {
-    BinaryTree<String> bt = getBalancedTree();
-    bt.printInOrder();
-    // TODO: Actually do a test here
+    final int NUM_LETTERS = 9;
+    String[] alphabet = new String[NUM_LETTERS];
+    Collection<String> expected = new ArrayList<String>(NUM_LETTERS);
+
+    for(int i = 0; i < NUM_LETTERS; i++) {
+      alphabet[i] = String.valueOf((char)(i + 65 + 32));
+    }
+
+    Collections.addAll(expected, alphabet);
+
+    ICombinatoricsVector<String> originalVector = Factory.createVector(alphabet);
+    Generator<String> gen = Factory.createPermutationGenerator(originalVector);
+    int counter = 0;
+
+    BinaryTree<String> bt = new BinaryTree<>();
+    ArrayList<String> fromTree = new ArrayList<>(NUM_LETTERS);
+    for (ICombinatoricsVector<String> perm : gen) {
+      counter++;
+      for(String s : perm.getVector()) {
+        bt.insert(s);
+      }
+
+      assertTrue(bt.validate());
+      bt.clear();
+      fromTree.clear();
+    }
+    System.out.println("Counter = " + counter);
   }
 
   @Test
@@ -60,34 +92,6 @@ public class BinaryTreeTest {
       System.out.println("howdy : " + i);
     }
     // TODO: Actually do a test here
-  }
-
-  @Test
-  public void removeMinNodeEmptyTree() {
-    BinaryTree<String> bt = new BinaryTree<>();
-
-    assertNull(bt.removeMinNode());
-  }
-
-  @Test
-  public void removeMinNodeOneLevelTree() {
-    BinaryTree<String> bt = new BinaryTree<>();
-
-    bt.insert("m");
-
-    assertEquals(new BinaryTree.Node<>("m"), bt.removeMinNode());
-    assertTrue(bt.isEmpty());
-  }
-
-  @Test
-  public void removeMinNodeTwoLevelTree() {
-    BinaryTree<String> bt = new BinaryTree<>();
-
-    bt.insert("m");
-    bt.insert("a");
-
-    assertEquals(new BinaryTree.Node<>("a"), bt.removeMinNode());
-    assertTrue(bt.contains("m"));
   }
 
   @Test
@@ -124,6 +128,35 @@ public class BinaryTreeTest {
       fromTree.clear();
     }
     System.out.println("Counter = " + counter);
+  }
+
+  @Test
+  public void findMinValueWorks() {
+    final int NUM_LETTERS = 9;
+    String[] alphabet = new String[NUM_LETTERS];
+    Collection<String> expected = new ArrayList<String>(NUM_LETTERS);
+
+    for(int i = 0; i < NUM_LETTERS; i++) {
+      alphabet[i] = String.valueOf((char)(i + 65 + 32));
+    }
+
+    Collections.addAll(expected, alphabet);
+
+    ICombinatoricsVector<String> originalVector = Factory.createVector(alphabet);
+    Generator<String> gen = Factory.createPermutationGenerator(originalVector);
+
+    BinaryTree<String> bt = new BinaryTree<>();
+    ArrayList<String> fromTree = new ArrayList<>(NUM_LETTERS);
+    for (ICombinatoricsVector<String> perm : gen) {
+      for(String s : perm.getVector()) {
+        bt.insert(s);
+      }
+
+      assertEquals("a", bt.findMinValue());
+
+      bt.clear();
+      fromTree.clear();
+    }
   }
 
   @Test
@@ -186,5 +219,54 @@ public class BinaryTreeTest {
     assertTrue(bt.contains("a"));
   }
 
+  @Test
+  public void removalFromRightSlantingTreeWorks() {
+    BinaryTree<String> bt = new BinaryTree<>();
 
+    bt.insert("m");
+    bt.insert("z");
+
+    assertTrue(bt.remove("m"));
+    assertTrue(bt.contains("z"));
+
+    assertTrue(bt.remove("z"));
+    assertTrue(bt.isEmpty());
+  }
+
+  @Test
+  public void removalPermutations() {
+    final int NUM_LETTERS = 8;
+    String[] alphabet = new String[NUM_LETTERS];
+    Collection<String> expected = new ArrayList<String>(NUM_LETTERS);
+
+    for(int i = 0; i < NUM_LETTERS; i++) {
+      alphabet[i] = String.valueOf((char)(i + 65 + 32));
+    }
+
+    Collections.addAll(expected, alphabet);
+
+    ICombinatoricsVector<String> originalVector = Factory.createVector(alphabet);
+    Generator<String> gen = Factory.createPermutationGenerator(originalVector);
+    int counter = 0;
+
+    BinaryTree<String> bt = new BinaryTree<>();
+    ArrayList<String> fromTree = new ArrayList<>(NUM_LETTERS);
+    for (ICombinatoricsVector<String> perm : gen) {
+      for(String letter : expected) {
+
+        counter++;
+        for (String s : perm.getVector()) {
+          bt.insert(s);
+        }
+        assertTrue("Should have removed " + letter, bt.remove(letter));
+        assertFalse(bt.contains(letter));
+        assertTrue(bt.validate());
+
+        bt.clear();
+        fromTree.clear();
+      }
+
+    }
+    System.out.println("zCounter = " + counter);
+  }
 }
