@@ -238,7 +238,14 @@ public class BinaryTree<T extends Comparable> {
     }
 
     if(root.element.equals(t)) {
-      return removeRoot();
+      // Create fake root so that we can rejigger tree around it
+      Node<T> fakeRoot = new Node<>(root.getElement());
+      fakeRoot.setRight(root);
+      remove(t, root, fakeRoot);
+
+      root = fakeRoot.getRight();
+
+      return true;
     }
 
     if(t.compareTo(root.element) < 0) {
@@ -246,31 +253,6 @@ public class BinaryTree<T extends Comparable> {
     } else {
       return remove(t, root.getRight(), root);
     }
-  }
-
-  private boolean removeRoot() {
-    if(root.getLeft() == null && root.getRight() == null) {
-      root = null;
-      return true;
-    }
-
-    if(root.getLeft() != null && root.getRight() == null) {
-      root = root.getLeft();
-      return true;
-    }
-
-    if(root.getLeft() == null && root.getRight() != null) {
-      root = root.getRight();
-      return true;
-    }
-
-    // Root has both left and right children, restructure tree around
-    // right side min.
-    T rightSideMin = findMinValue(root.getRight());
-    assert(rightSideMin != null);
-    remove(rightSideMin);
-    root.element = rightSideMin;
-    return true;
   }
 
   private boolean remove(T t, Node<T> node, Node<T> parent) {
