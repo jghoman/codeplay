@@ -1,10 +1,20 @@
+-- AvroContainer --
+HEADER = 'Obj' .. '\1'
 
-local inp = assert(io.open("./doctors.avro", "rb"))
+AvroContainer = { }
 
-local data = inp:read(5 )
+function AvroContainer:new(file)
+  local inp = assert(io.open(file, "rb"))
+  local data = inp:read(4)
+  if not self:is_valid_avro_container(data) then
+    error("Not a valid Avro container: " .. file)
+  end
 
-for i = 1, #data do
-  c = string.sub(data, i, i)
-  print(c .. " - > " .. string.byte(c))
 end
-print("data = [" .. data .. "]")
+
+function AvroContainer:is_valid_avro_container(first_four_bytes)
+  return HEADER == first_four_bytes
+end
+
+doctors = AvroContainer:new("./doctors.avro")
+
