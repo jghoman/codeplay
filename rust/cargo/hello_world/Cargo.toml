@@ -1,8 +1,0 @@
-[package]
-
-name = "hello_world"
-version = "0.0.1"
-authors = ["Jakob Homan <jghoman@gmail.com>"]
-
-[dependencies.color]
-git = "https://github.com/bjz/color-rs.git"
