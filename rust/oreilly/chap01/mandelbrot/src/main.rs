@@ -72,9 +72,10 @@ fn test_pixel_to_point() {
 }
 
 
-fn render(pixels: &mut [u8], bounds: (usize, usize), upper_left: Complex<f64>, lower_right: Complex<f64>) {
+fn render(band_num: usize, pixels: &mut [u8], bounds: (usize, usize), upper_left: Complex<f64>, lower_right: Complex<f64>) {
     assert!(pixels.len() == bounds.0 * bounds.1);
 
+    println!("Starting to render band {}", band_num);
     for row in 0 .. bounds.1 {
         for column in 0 .. bounds.0 {
             let point = pixel_to_point(bounds, (column, row), upper_left, lower_right);
@@ -83,7 +84,9 @@ fn render(pixels: &mut [u8], bounds: (usize, usize), upper_left: Complex<f64>, l
                 Some(count) => 255 - count as u8
             };
         }
-     }
+    }
+
+    println!("Done rendering band {}", band_num);
 }
 
 fn write_image(filename: &str, pixels: &[u8], bounds: (usize, usize)) -> Result<(), std::io::Error> {
@@ -111,7 +114,7 @@ fn main() {
     let mut pixels = vec![0; bounds.0 * bounds.1];
 
     //render(&mut pixels, bounds, upper_left, lower_right);
-    let threads = 4;
+    let threads = 8;
     let rows_per_band = bounds.1 / threads + 1;
 
     {
@@ -125,7 +128,7 @@ fn main() {
                 let band_lower_right = pixel_to_point(bounds, (bounds.0, top + height), upper_left, lower_right);
 
                 spawner.spawn(move || { 
-                    render(band, band_bounds, band_upper_left, band_lower_right);
+                    render(i, band, band_bounds, band_upper_left, band_lower_right);
                 });
             }
         });

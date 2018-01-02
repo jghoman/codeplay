@@ -2,4 +2,5 @@
 set -e # Bail early
 #set -x # Very verbose
 
-target/release/mandelbrot mandel.png 8000x6000 -1.20,0.35 -1,0.20
+cargo build --release
+target/release/mandelbrot mandel.png 16000x12000 -1.20,0.35 -1,0.20
