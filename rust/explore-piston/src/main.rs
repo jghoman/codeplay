@@ -11,7 +11,8 @@ use opengl_graphics::{ GlGraphics, OpenGL };
 
 pub struct App {
     gl: GlGraphics,
-    rotation: f64
+    rotation: f64,
+    length: f64
 }
 
 impl App {
@@ -21,7 +22,7 @@ impl App {
         const GREEN: [f32; 4] = [0.0, 1.0, 0.0, 1.0];
         const RED:   [f32; 4] = [1.0, 0.0, 0.0, 1.0];
 
-        let square = rectangle::square(0.0, 0.0, 5.0);
+        let square = rectangle::square(0.0, 0.0, self.length);
         let rotation = self.rotation;
         let (x,y) = ((args.width /2) as f64, (args.height / 2) as f64);
 
@@ -40,6 +41,7 @@ impl App {
 
     fn update(&mut self, args: &UpdateArgs) {
         self.rotation += 2.0 * args.dt;
+        self.length += 2.0 * args.dt;
     }
 }
 
@@ -52,12 +54,14 @@ fn main() {
     )
     .opengl(opengl)
     .exit_on_esc(true)
+    .vsync(true)
     .build()
     .unwrap();
 
     let mut app = App {
         gl: GlGraphics::new(opengl),
-        rotation: 0.0
+        rotation: 0.0,
+        length: 5.0
     };
 
     let mut events = Events::new(EventSettings::new());
