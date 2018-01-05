@@ -27,6 +27,14 @@ impl<T: Ord + Display> BinaryTree<T> {
         }
     }
 
+    fn print_in_order(& self) {
+
+        if let BinaryTree::NonEmpty(ref node) = *self {
+          node.left.print_in_order();
+          println!("{}", node.element);
+          node.right.print_in_order();  
+        }
+    }
 
     fn new() -> BinaryTree<T> {
         BinaryTree::Empty
@@ -41,4 +49,5 @@ fn main() {
     tree.add(5);
     tree.add(3);
     tree.add(1);
+    tree.print_in_order();
 }
