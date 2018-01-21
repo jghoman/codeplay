@@ -49,4 +49,9 @@ fn main() {
     let monsters = count_selected_cities(&cities, has_monster_attacks);
 
     println!("Hello, world! monster cities = {}", monsters);
+
+    let acceptable_risk = 0.5;
+    let n = count_selected_cities(&cities, |city| city.monster_attack_risk > 0.5);
+
+    println!("This should have been a type error = {}", n);
 }
