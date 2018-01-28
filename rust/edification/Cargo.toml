@@ -1,0 +1,6 @@
+[package]
+name = "edification"
+version = "0.1.0"
+authors = ["Jakob Homan <jghoman@gmail.com>"]
+
+[dependencies]
