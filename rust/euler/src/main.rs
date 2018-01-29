@@ -14,15 +14,13 @@ fn p01_sum_5_or_3_multiples(upper_bound: u64) -> u64 {
 
 #[test]
 fn p01_test_sum_5_or_3_multiples() {
-    assert_eq!(sum_5_or_3_multiples(10), 23);
+    assert_eq!(p01_sum_5_or_3_multiples(10), 23);
 }
 
 #[test]
 fn p01_test_expected_answer() {
-    assert_eq!(sum_5_or_3_multiples(1000), 233168);
+    assert_eq!(p01_sum_5_or_3_multiples(1000), 233168);
 }
-
-
 
 fn main() {
     let result = p01_sum_5_or_3_multiples(1000);
