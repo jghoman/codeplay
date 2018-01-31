@@ -52,6 +52,17 @@ primitive Blue  fun apply(): U32 => 0x0000FFFF
 
 type Colour is (Red | Blue | Green)
 
+trait HasFirstName
+  fun name(): String => "Bob"
+
+trait HasAge
+  fun age(): U32 => 42
+
+trait HasAddress
+  fun address(): String => "3 Abbey Road"
+
+type Person is (HasName & HasAge & HasAddress)
+
 actor Main
   new create(env: Env) =>
     let defaultWombat = Wombat("Fantastibat")
