@@ -6,3 +6,6 @@ run: compile
 
 clean:
 	rm main
+
+pull_ponyc:
+	docker pull ponylang/ponyc:latest
