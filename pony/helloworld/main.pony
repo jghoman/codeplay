@@ -63,7 +63,34 @@ trait HasAddress
 
 type Person is (HasName & HasAge & HasAddress)
 
+class Foo
+  var _count:I32 = 0
+
+  fun say_hi():String => "hi"
+
+  fun ref apply() => _count = _count + 1
+
+  fun get_count():I32 => _count
+
+class UpdateSugar
+  let _env:Env
+
+  new create(env': Env) =>
+    _env = env'
+    _env.out.print("In create")
+
+  fun update(someText:String, value: I32) =>
+    _env.out.print("In update with " + someText + " and " + value.string())
+
 actor Main
+  fun factorial(x: I32): I32 ? =>
+    if x < 0 then error end
+    if x == 0 then
+      1
+    else
+      x * factorial(x - 1)?
+    end
+
   new create(env: Env) =>
     let defaultWombat = Wombat("Fantastibat")
     let hungryWombat = Wombat.hungry("Nomsbat", 12)
@@ -85,3 +112,20 @@ actor Main
 
     let myColour = Green
     env.out.print("My colour is " + myColour.apply().string())
+
+    try
+      let ans = factorial(-3)?
+    else
+      env.out.print("Couldn't calculate factorial -3")
+    end
+
+    let foo = Foo
+    env.out.print("foo = " + foo.say_hi())
+
+    foo()
+    foo()
+    env.out.print("count = " + foo.get_count().string())
+
+    // Update sugar
+    let updateSugar = UpdateSugar(env)
+    updateSugar("Hello") = 32
