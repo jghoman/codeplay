@@ -1,3 +1,4 @@
+//use "apackage"
 
 trait Named
   fun get_name(): String
@@ -129,3 +130,6 @@ actor Main
     // Update sugar
     let updateSugar = UpdateSugar(env)
     updateSugar("Hello") = 32
+
+    let fromPackage = FromPackage.create("howdy")
+    fromPackage.do_greeting(env)
