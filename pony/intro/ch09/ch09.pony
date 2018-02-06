@@ -10,6 +10,7 @@ actor Main is TestList
     fun tag tests(test: PonyTest) =>
         test(_TestAdd)
         test(_TestSub)
+        test(_TestFail)
 
 class iso _TestAdd is UnitTest
     fun name(): String => "addition"
@@ -22,3 +23,9 @@ class iso _TestSub is UnitTest
 
     fun apply(h: TestHelper) =>
         h.assert_eq[U32](2, 4 - 2)
+
+class iso _TestFail is UnitTest
+    fun name(): String => "failure"
+
+    fun apply(h: TestHelper) =>
+        h.assert_eq[U32](9, 2)
