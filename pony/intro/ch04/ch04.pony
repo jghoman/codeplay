@@ -10,7 +10,7 @@ class Wombat
 actor Main
     let env: Env
     // Mutable reference capabilities
-    //   * None of these allow other actors to read frpom or write to the object
+    //   * None of these allow other actors to read from or write to the object
 
     // iso: No other variable by any actor can read or write (read and write unique)
     // var anIso: String iso = "iso"
@@ -46,6 +46,21 @@ actor Main
         // Not allowed, as have consume the variable...
         // var c: Wombat = a
 
+    fun not_allowed(a: Wombat iso) =>
+        // Not alowed to alias an iso
+        // var b: Wombat iso = a
+        None
+
+    fun is_allowed(a: Wombat iso) =>
+        var b: Wombat tag = a
+
+    fun trn_alias(a: Wombat trn) =>
+        var b: Wombat box = a
+
+    // Allowed types of aliasing
+    // iso => tag
+    // trn => box
+
     new create(env': Env) =>
         env = env'
 
@@ -53,6 +68,8 @@ actor Main
         env.out.print("Let's go ahead and consume a wombat...")
 
         consume_a_variable(Wombat("Wommie") )
-        //consume_a_variable(w)
         
-        //env.out.print("My wombat = " + w.string())
+        let s = recover String end
+        //let s = "hello"
+        s.append("hi")
+        //env.out.print("s = " + s)
