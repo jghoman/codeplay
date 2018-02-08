@@ -13,7 +13,7 @@ everyOther (x :: y :: xs) = x :: everyOther xs
 -- Build a data type representing a playing card from a standard poker deck.
 data Suite = Hearts | Spades | Clubs | Diamonds
 data Rank  = Ace | Two | Three | Four | Five | Six | Seven | Eight | Nine | Ten | Jack | Queen | King
-data Card : Rank -> Suite
+data Card = C Rank Suite
 
---MyCard : Card
---MyCard = Ace Spades
+MyCard : Card
+MyCard = C Ace Spades
