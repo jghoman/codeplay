@@ -4,4 +4,4 @@ intFunction : Int
 intFunction = 1887
 
 stringFunction : String
-stringFunction = "Howdy"
+stringFunction = "A Study in Scarlet"
