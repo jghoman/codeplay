@@ -12,7 +12,7 @@ use "collections"
 actor Main
     let env:Env
     
-    // Apparently there is now pow for integers in the stdlib... ?
+    // Apparently there is no pow for integers in the stdlib... ?
     fun pow(i: USize, j: USize): USize =>
         var product:USize = 1
         for k in Range(0, j) do
