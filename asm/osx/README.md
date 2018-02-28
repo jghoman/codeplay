@@ -1,0 +1,1 @@
+Exercises taken from [here](http://www.idryman.org/blog/2014/12/02/writing-64-bit-assembly-on-mac-os-x/).
