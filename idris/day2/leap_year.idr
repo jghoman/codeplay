@@ -21,3 +21,9 @@ validDate year month day = (day >= 1) &&
 data Date : Integer -> Integer -> Integer -> Type where
   makeDate : (y:Integer) -> (m:Integer) -> (d:Integer) -> So (validDate y m d)
            -> Date y m d
+
+dateFromUnsafeInput : (y:Integer) -> (m:Integer) -> (d:Integer)
+                    -> Maybe (Date y m d)
+dateFromUnsafeInput y m d = case choose (validDate y m d) of
+                                 Left valid => Just (makeDate y m d valid)
+                                 Right _    => Nothing
