@@ -4,3 +4,5 @@ Using Anaconda:
 
 > conda create -n tf2 python=3.6
 > source activate tf2
+
+Tensorflow docker [documentation.](https://www.tensorflow.org/install/docker)
