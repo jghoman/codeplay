@@ -1,0 +1,13 @@
+name: helloworld
+version: 0.1.0
+
+authors:
+  - Jakob Homan <jghoman@gmail.com>
+
+targets:
+  helloworld:
+    main: src/helloworld.cr
+
+crystal: 0.29.0
+
+license: MIT
