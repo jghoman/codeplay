@@ -133,6 +133,27 @@
     )
   )
 
+  ;; Should this piece get crowned?
+  ;; We crown black pieces in row 0, white pices in row 7
+  (func $shouldCrown (param $pieceY i32) (param $piece i32) (result i32)
+    (i32.or
+      (i32.and
+        (i32.eq
+          (get_local $pieceY)
+          (i32.const 0)
+        )
+        (call $isBlack (get_local $piece))
+      )
+      (i32.and
+        (i32.eq
+          (get_local $pieceY)
+          (i32.const 7)
+        )
+        (call $isWhite (get_local $piece))
+      )
+    )
+  )
+
   (export "offsetForPosition" (func $offsetForPosition))
   (export "isCrowned" (func $isCrowned))
   (export "isWhite" (func $isWhite))
