@@ -1,4 +1,4 @@
-fetch('./func_test.wasm').then(response =>
+fetch('./checkers.wasm').then(response =>
   response.arrayBuffer()
 ).then(bytes => WebAssembly.instantiate(bytes)).then(results => {
     console.log("Loaded wasm module");
