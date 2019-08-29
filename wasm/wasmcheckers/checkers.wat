@@ -154,6 +154,82 @@
     )
   )
 
+  ;; Converts a piece into a crowned piece and invokes
+  ;; a host notifier
+  (func $crownPiece (param $x i32) (param $y i32)
+    (local $piece i32)
+    (set_local $piece (call $getPiece (get_local $x) (get_local $y)))
+    
+    (call $setPiece (get_local $x) (get_local $y)
+      (call $withCrown (get_local $piece)))
+
+    (call $notify_piececrowned (get_local $x) (get_local $y))
+  )
+
+  (func $distance (param $x i32) (param $y i32)
+    (i32.sub (get_local $x) (get_local $y))
+  )
+
+  (func $isValidMove (param $fromX i32) (param $fromY i32) (param $toX i32) (param $toY i32)
+    (local $player i32)
+    (local $target i32)
+
+    (set_local $player (call $getPiece (get_local $fromX) (get_local $fromY)))
+    (set_local $target (call $getPiece (get_local $toX) (get_local $toY)))
+
+    (if (result i32)
+      (block (result i32)
+        (i32.and
+          (call $validJumpDistance (get_local $fromY) (get_local $toY))
+          (i32.and
+            (call $isPlayersTurn (get_local $player))
+            (i32.eq (get_local $target) (i32.const 0)) ;; target must be unoccupied
+          )
+        )
+      )
+      ( then
+        (i32.const 1)
+      )
+      ( else
+        (i32.const 0)
+      )
+    )
+  )
+
+  ;; Ensure travel is 1 or 2 squares
+  (func $validJumpDistance (param $from i32) (param $to i32) (result i32)
+    (local $d i32)
+    (set_local $d
+    (if (result i32)
+        (i32.gt_s (get_local $to) (get_local $from))
+        (then
+        (call $distance (get_local $to) (get_local $from))     
+        )
+        (else
+        (call $distance (get_local $from) (get_local $to))
+        ))
+    )
+    (i32.le_u
+      (get_local $d)
+      (i32.const 2)
+    )
+  )
+
+  ;; Exported move function to be called by the game host
+  (func $move (param $fromX i32) (param $fromY i32) (param $toX i32) (param $toY i32) (result i32)
+    (if (result i32)
+      (block (result i32)
+        (call $isValidMove (get_local $fromX) (get_local $fromY) (get_local $toX) (get_local $toY))
+      )
+    )
+    (then 
+      (call $do_move (get_local $fromX) (get_local $fromY) (get_local $toX) (get_local $toY))
+    )
+    (else
+      (i32.const 0)
+    )
+  )
+
   (export "offsetForPosition" (func $offsetForPosition))
   (export "isCrowned" (func $isCrowned))
   (export "isWhite" (func $isWhite))
