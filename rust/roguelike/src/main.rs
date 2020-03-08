@@ -1,8 +1,8 @@
+use core::cmp;
 use tcod::colors::*;
 use tcod::console::*;
 use tcod::input::Key;
 use tcod::input::KeyCode::*;
-use core::cmp;
 
 use rand::Rng;
 use tcod::map::{FovAlgorithm, Map as FovMap};
@@ -10,22 +10,32 @@ use tcod::map::{FovAlgorithm, Map as FovMap};
 const SCREEN_WIDTH: i32 = 80;
 const SCREEN_HEIGHT: i32 = 50;
 
-const MAP_WIDTH:i32 = 80;
-const MAP_HEIGHT:i32 = 45;
+const MAP_WIDTH: i32 = 80;
+const MAP_HEIGHT: i32 = 45;
 
-const COLOR_DARK_WALL: Color = Color {r: 0, g: 0, b: 100 };
-const COLOR_LIGHT_WALL:Color = Color {r: 130, g:100, b: 50,};
-const COLOR_DARK_GROUND: Color = Color { r: 50, g: 50, b: 150 };
-const COLOR_LIGHT_GROUND: Color = Color { r: 200, g: 180, b: 50 };
+const COLOR_DARK_WALL: Color = Color { r: 0, g: 0, b: 100 };
+const COLOR_LIGHT_WALL: Color = Color {
+    r: 130,
+    g: 100,
+    b: 50,
+};
+const COLOR_DARK_GROUND: Color = Color {
+    r: 50,
+    g: 50,
+    b: 150,
+};
+const COLOR_LIGHT_GROUND: Color = Color {
+    r: 200,
+    g: 180,
+    b: 50,
+};
 
-
-
-const FOV_ALGO:FovAlgorithm = FovAlgorithm::Basic;
+const FOV_ALGO: FovAlgorithm = FovAlgorithm::Basic;
 const FOV_LIGHT_WALLS: bool = true;
-const TORCH_RADIUS:i32 = 10;
+const TORCH_RADIUS: i32 = 10;
 
-const ROOM_MAX_SIZE:i32 = 10;
-const ROOM_MIN_SIZE:i32 = 6;
+const ROOM_MAX_SIZE: i32 = 10;
+const ROOM_MIN_SIZE: i32 = 6;
 const MAX_ROOMS: i32 = 30;
 
 const LIMIT_FPS: i32 = 20;
@@ -46,7 +56,7 @@ struct Object {
 
 impl Object {
     pub fn new(x: i32, y: i32, char: char, color: Color) -> Self {
-        Object {x, y, char, color}
+        Object { x, y, char, color }
     }
 
     pub fn move_by(&mut self, dx: i32, dy: i32, game: &Game) {
@@ -61,7 +71,6 @@ impl Object {
         con.put_char(self.x, self.y, self.char, BackgroundFlag::None);
     }
 }
-
 
 #[derive(Clone, Copy, Debug)]
 struct Tile {
@@ -101,8 +110,13 @@ struct Rect {
 }
 
 impl Rect {
-    pub fn new(x: i32, y:i32, w: i32, h: i32) -> Self {
-        Rect {x1: x, y1: y, x2: x + w, y2: y + h}
+    pub fn new(x: i32, y: i32, w: i32, h: i32) -> Self {
+        Rect {
+            x1: x,
+            y1: y,
+            x2: x + w,
+            y2: y + h,
+        }
     }
 
     pub fn center(&self) -> (i32, i32) {
@@ -112,9 +126,10 @@ impl Rect {
     }
 
     pub fn intersects_with(&self, other: &Rect) -> bool {
-        (self.x1 <= other.x2) && (self.x2 >= other.x1)
-          && (self.y1 <= other.y2)
-          && (self.y2 >= other.y1)
+        (self.x1 <= other.x2)
+            && (self.x2 >= other.x1)
+            && (self.y1 <= other.y2)
+            && (self.y2 >= other.y1)
     }
 }
 
@@ -184,24 +199,28 @@ fn make_map(player: &mut Object) -> Map {
 }
 
 fn handle_keys(tcod: &mut Tcod, game: &Game, player: &mut Object) -> bool {
-   let key = tcod.root.wait_for_keypress(true);
-   match key {
-     Key { code: Enter, alt: true, ..} => {
-         let fullscreen = tcod.root.is_fullscreen();
-         tcod.root.set_fullscreen(!fullscreen)
-     }
-     Key { code: Escape, .. } => return true,
-     Key { code: Up, .. } => player.move_by(0, -1, game),
-     Key { code: Down, .. } => player.move_by(0, 1, game),
-     Key { code: Left, .. } => player.move_by(-1, 0, game),
-     Key { code: Right, .. } => player.move_by(1, 0, game),
+    let key = tcod.root.wait_for_keypress(true);
+    match key {
+        Key {
+            code: Enter,
+            alt: true,
+            ..
+        } => {
+            let fullscreen = tcod.root.is_fullscreen();
+            tcod.root.set_fullscreen(!fullscreen)
+        }
+        Key { code: Escape, .. } => return true,
+        Key { code: Up, .. } => player.move_by(0, -1, game),
+        Key { code: Down, .. } => player.move_by(0, 1, game),
+        Key { code: Left, .. } => player.move_by(-1, 0, game),
+        Key { code: Right, .. } => player.move_by(1, 0, game),
 
-     _ => {}
-   }
-   return false;
+        _ => {}
+    }
+    return false;
 }
 
-fn render_all(tcod: &mut Tcod, game: &Game, objects: &[Object], fov_recompute:bool) {
+fn render_all(tcod: &mut Tcod, game: &Game, objects: &[Object], fov_recompute: bool) {
     for object in objects {
         if tcod.fov.is_in_fov(object.x, object.y) {
             object.draw(&mut tcod.con);
@@ -211,14 +230,14 @@ fn render_all(tcod: &mut Tcod, game: &Game, objects: &[Object], fov_recompute:bo
     if fov_recompute {
         let player = &objects[0];
         tcod.fov
-            .compute_fov(player.x, player.y, TORCH_RADIUS,FOV_LIGHT_WALLS, FOV_ALGO);
+            .compute_fov(player.x, player.y, TORCH_RADIUS, FOV_LIGHT_WALLS, FOV_ALGO);
     }
 
     for y in 0..MAP_HEIGHT {
         for x in 0..MAP_WIDTH {
             let visible = tcod.fov.is_in_fov(x, y);
             let wall = game.map[x as usize][y as usize].block_sight;
-            let color = match(visible, wall) {
+            let color = match (visible, wall) {
                 // outside field of view
                 (false, true) => COLOR_DARK_WALL,
                 (false, false) => COLOR_DARK_GROUND,
@@ -227,19 +246,19 @@ fn render_all(tcod: &mut Tcod, game: &Game, objects: &[Object], fov_recompute:bo
                 (true, false) => COLOR_LIGHT_GROUND,
             };
 
-            tcod.con.set_char_background(x, y, color, BackgroundFlag::Set);
-
+            tcod.con
+                .set_char_background(x, y, color, BackgroundFlag::Set);
         }
     }
 
     blit(
         &tcod.con,
-        (0,0),
+        (0, 0),
         (MAP_WIDTH, MAP_HEIGHT),
         &mut tcod.root,
-        (0,0),
+        (0, 0),
         1.0,
-        1.0
+        1.0,
     );
 }
 
@@ -259,7 +278,11 @@ fn main() {
 
     let con = Offscreen::new(MAP_WIDTH, MAP_HEIGHT);
 
-    let mut tcod = Tcod { root, con, fov: FovMap::new(MAP_WIDTH, MAP_HEIGHT) };
+    let mut tcod = Tcod {
+        root,
+        con,
+        fov: FovMap::new(MAP_WIDTH, MAP_HEIGHT),
+    };
 
     let game = Game {
         map: make_map(&mut objects[0]),
@@ -267,11 +290,12 @@ fn main() {
 
     for y in 0..MAP_HEIGHT {
         for x in 0..MAP_WIDTH {
-            tcod.fov.set(x,
-                         y,
-                         !game.map[x as usize][y as usize].block_sight,
-                         !game.map[x as usize][y as usize].blocked,
-                        );
+            tcod.fov.set(
+                x,
+                y,
+                !game.map[x as usize][y as usize].block_sight,
+                !game.map[x as usize][y as usize].blocked,
+            );
         }
     }
 
@@ -292,7 +316,7 @@ fn main() {
         previous_player_position = (player.x, player.y);
         let exit = handle_keys(&mut tcod, &game, player);
         if exit {
-          break;
+            break;
         }
     }
 }
