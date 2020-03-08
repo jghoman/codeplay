@@ -348,9 +348,6 @@ fn render_all(tcod: &mut Tcod, game: &mut Game, objects: &[Object], fov_recomput
     for object in objects {
         if tcod.fov.is_in_fov(object.x, object.y) {
             object.draw(&mut tcod.con);
-            println!("{} is in the fov", object.name);
-        } else {
-            println!("{} is not in the fov", object.name);
         }
     }
 
@@ -418,11 +415,6 @@ fn main() {
 
     while !tcod.root.window_closed() {
         tcod.con.clear();
-
-        for object in &objects {
-            object.draw(&mut tcod.con)
-        }
-
         let fov_recompute = previous_player_position != objects[PLAYER].pos();
         render_all(&mut tcod, &mut game, &objects, fov_recompute);
         tcod.root.flush();
