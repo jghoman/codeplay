@@ -157,7 +157,10 @@ fn ai_take_turn(monster_id: usize, tcod: &Tcod, game: &Game, objects: &mut [Obje
         } else if objects[PLAYER].fighter.map_or(false, |f| f.hp > 0) {
             // close enough, attack!
             let monster = &objects[monster_id];
-            println!("The attack of the {} bounces off your shiny metal armor!", monster.name);
+            println!(
+                "The attack of the {} bounces off your shiny metal armor!",
+                monster.name
+            );
         }
     }
 }
@@ -306,7 +309,7 @@ fn place_objects(room: Rect, map: &Map, objects: &mut Vec<Object>) {
                     max_hp: 10,
                     hp: 10,
                     defense: 0,
-                    power: 3
+                    power: 3,
                 });
                 orc.ai = Some(AI::Basic);
                 orc
