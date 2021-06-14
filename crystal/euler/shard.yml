@@ -1,0 +1,13 @@
+name: euler
+version: 0.1.0
+
+authors:
+  - Jakob Homan <your-email-here>
+
+targets:
+  euler:
+    main: src/euler.cr
+
+crystal: 1.0.0
+
+license: MIT
