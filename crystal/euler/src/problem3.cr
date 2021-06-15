@@ -77,15 +77,28 @@ end
 #find_primes_for = 1_000_000
 # puts "First primes up to #{find_primes_for}: #{find_primes(find_primes_for)}"
 
-largest = 3
-to_check_up_to = to_find // 2
-3_i64.step(to: to_check_up_to, by: 2) { |x|
-    if to_find % x == 0
-        if is_prime(x)
-            largest = x
-        end
+# largest = 3
+# to_check_up_to = to_find // 2
+# 3_i64.step(to: to_check_up_to, by: 2) { |x|
+#     if to_find % x == 0
+#         if is_prime(x)
+#             largest = x
+#         end
+#     end
+
+# }
+
+# puts "largest = #{largest}"
+
+# Adapted from solution on Project Euler
+number =  to_find
+divisor = 2
+while number > 1
+    if 0 == (number % divisor)
+        number = number // divisor
+        divisor = divisor - 1
     end
+    divisor = divisor + 1
+end
 
-}
-
-puts "largest = #{largest}"
+print "Hmmm: #{divisor}"
