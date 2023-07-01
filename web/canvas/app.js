@@ -4,16 +4,49 @@ window.onload = function() {
 
     console.log(context);
 
-    const radian = Math.PI / 180;
+    let firstx = 0;
+    let secondx = canvas.width;
+    let direction = "right"
+    function animate() {
+        // Clear the canvas
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
-    context.fillStyle = "red";
-    context.fillRect(150, 50, 100, 50);
 
-    // Rotate the canvas by 45 degrees
-    context.rotate(45 * radian);
+        // Update the circle's position
+        
+        if (direction === "right") {
+            firstx += 2;
+            secondx -= 1;
+            if(firstx + 25 > canvas.width) {
+                direction = "left"
+            }
+        } else {
+            firstx -= 2;
+            secondx += 1;
+            if(firstx <= 0) {
+                direction = "right"
+            }
+        }
+        
 
-    // Draw another rectangle
-    context.fillStyle = "blue"
-    context.fillRect(150, 50, 100, 50);
 
+
+        // Draw the circle
+        context.beginPath();
+        context.arc(firstx, 50, 25, 0, 2 * Math.PI);
+        context.fillStyle = "pink";
+        context.fill();
+
+        // Draw another circle
+        context.beginPath();
+        context.arc(secondx, 250, 45, 0, 2 * Math.PI);
+        context.fillStyle = "lightblue";
+        context.fill();
+
+        // Schedule the next frame
+        requestAnimationFrame(animate);
+    }
+
+    // Start the animation
+    animate();
 }
