@@ -4,63 +4,43 @@ window.onload = function() {
 
     console.log(context);
 
-    let firstx = canvas.width / 2;
-    let firsty = canvas.height / 2;
+    const sprite = {
+        image:new Image(),
+        frameWidth: 165,
+        frameHeight: 250,
+        numFrames: 7,
+        currentFrame: 0,
+        frameRate: 12,
+        lastUpdate: 0,
+        x: 0,
+        y: 0,
 
-    let firstvx = 5;
-    let firstvy = 2;
+        load:function() {
+            this.image.src = "sprites.png";
+        },
 
-    const firstradius = 25;
+        draw:function() {
+            context.drawImage(this.image, this.currentFrame * this.frameWidth, 0, this.frameWidth, this.frameHeight, this.x, this.y, this.frameWidth, this.frameHeight);
+        },
 
-    let secondx = 30;
-    let secondy = 30;
-
-    let secondvx = 7;
-    let secondvy = 9;
-
-    const secondradius = 30;
-
-
-    function animate() {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Update ball position and velocity
-        firstx += firstvx;
-        firsty += firstvy;
-        secondx += secondvx;
-        secondy += secondvy;
-
-        // Check for collision
-        if((secondx - firstx) * (secondx - firstx) + (secondy - firsty) * (secondy - firsty) <= (firstradius + secondradius) * (firstradius + secondradius)) {
-            firstvx = -firstvx;
-            firstvy = -firstvy;
-            secondvx = -secondvx;
-            secondvy = -secondvy;
-        } else {
-            if(firstx + firstradius > canvas.width || firstx - firstradius < 0) {
-                firstvx = -firstvx;
-            }
-            if(firsty + firstradius > canvas.height || firsty - firstradius < 0) {
-                firstvy = -firstvy;
-            }
-
-            if(secondx + secondradius > canvas.width || secondx - secondradius < 0) {
-                secondvx = -secondvx;
-            }
-            if(secondy + secondradius > canvas.height || secondy - secondradius < 0) {
-                secondvy = -secondvy;
+        update:function(time) {
+           //console.log("time = " + time + ", " + this.lastUpdate + ", " + (1000 / this.frameRate));
+            if(time - this.lastUpdate > 1000 / this.frameRate) {
+                //console.log("I'm updating because time elapsed!");
+                this.currentFrame = (this.currentFrame + 1) % this.numFrames;
+                this.lastUpdate = time;
             }
         }
-        // Draw the balls
-        context.beginPath();
-        context.arc(firstx, firsty, firstradius, 0, 2 * Math.PI);
-        context.fillStyle = "red";
-        context.fill();
+    };
 
-        context.beginPath();
-        context.arc(secondx, secondy, secondradius, 0, 2 * Math.PI);
-        context.fillStyle = "blue";
-        context.fill();
+    sprite.load();
+
+    function animate(time) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        sprite.update(time)
+        sprite.draw();
+
 
         requestAnimationFrame(animate);
     }
